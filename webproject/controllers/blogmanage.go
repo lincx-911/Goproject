@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-
-	_ "strconv"
+	"strconv"
 	swt "webproject/middleswt"
 	"webproject/models"
 	"webproject/utils"
@@ -37,14 +36,12 @@ func Blogadd(w http.ResponseWriter,r *http.Request){
 		err := json.NewDecoder(r.Body).Decode(&blog)
 		fmt.Println(blog,err)
 		utils.CheckError(err)
-		blog.ID="sjcos17"
 		err=models.InsertBg(blog)
 		if err!=nil{
 			fmt.Println("数据库错误",err)
 			res:=models.Response{Code:http.StatusForbidden,Msg: "添加失败",Data: nil}
 			fmt.Println("res:",res)
 			swt.ResponseWithJson(w,http.StatusForbidden,res)
-			fmt.Println("怎么又回来了呀")
 			return
 		}
 		fmt.Println("数据库正确")
@@ -96,7 +93,8 @@ func Blogadit(w http.ResponseWriter,r *http.Request){
 		swt.ResponseWithJson(w,http.StatusOK,res)
 	}else{
 		r.ParseForm()
-		id:=r.FormValue("id")
+		id1:=r.FormValue("id")
+		id,err:=strconv.Atoi(id1)
 		fmt.Println(id)
 		b,err:=models.GetBlogbyID(id)
 		if err!=nil{

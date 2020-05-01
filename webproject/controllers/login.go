@@ -11,20 +11,35 @@ import (
 
 //Register 用户注册
 func Register(w http.ResponseWriter, r *http.Request) {
-	var user models.User
-	err := json.NewDecoder(r.Body).Decode(&user)
-	fmt.Println(user.Username)
-	fmt.Println(user.Password)
-	if err != nil || user.Username == "" || user.Password == "" {
-		swt.ResponseWithJson(w, http.StatusBadRequest,
-			models.Response{Code: http.StatusBadRequest, Msg: "bad params"})
+	fmt.Println("Register", r.Method)
+	if r.Method == "POST" {
+		var user models.User
+		err := json.NewDecoder(r.Body).Decode(&user)
+		fmt.Println(user.Username)
+		fmt.Println(user.Password)
+		if err != nil {
+			swt.ResponseWithJson(w, http.StatusBadRequest,
+				models.Response{Code: http.StatusBadRequest, Msg: "bad params"})
+			return
+		}
+		x, err := models.GetUserbyName(user.Username)
+		if x == user {
+			swt.ResponseWithJson(w, http.StatusForbidden,
+				models.Response{Code: http.StatusForbidden, Msg: "用户已存在"})
+			return
+		}
+		_, err = models.Insert(user)
+		if err != nil {
+			swt.ResponseWithJson(w, http.StatusInternalServerError,
+				models.Response{Code: http.StatusInternalServerError, Msg: "internal error"})
+			return
+		}
+		swt.ResponseWithJson(w, http.StatusOK,
+			models.Response{Code: http.StatusOK, Msg: "注册成功"})
 		return
 	}
-	_, err = models.Insert(user)
-	if err != nil {
-		swt.ResponseWithJson(w, http.StatusInternalServerError,
-			models.Response{Code: http.StatusInternalServerError, Msg: "internal error"})
-	}
+	t, _ := template.ParseFiles("views/regin.gtpl")
+	t.Execute(w, nil)
 }
 
 //Login 用户登录
@@ -33,47 +48,40 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		t, _ := template.ParseFiles("views/login.gtpl")
 		t.Execute(w, nil)
-	}else{
-		r.ParseForm()
-		// err := json.NewDecoder(r.Body).Decode(&user)
-		// if err != nil {
-		// 	swt.ResponseWithJson(w, http.StatusBadRequest,
-		// 		models.Response{Code: http.StatusBadRequest, Msg: "bad params"})
-		// }
-		username:=r.FormValue("username")
-		password:=r.FormValue("password")
-		user, err := models.GetUserbyName(username)
+	} else {
+		var user models.User
+		err := json.NewDecoder(r.Body).Decode(&user)
+		if err != nil {
+			swt.ResponseWithJson(w, http.StatusBadRequest,
+				models.Response{Code: http.StatusBadRequest, Msg: "bad params",Data: nil})
+		}
+		
+		fmt.Println(user.Username,user.Password)
+		user1, err := models.GetUserbyName(user.Username)
+		fmt.Println(user1)
 		if err == nil {
-			if user.Password==password{
+			if user.Password == user1.Password {
 				token, _ := swt.GenerateToken(&user)
-				r.Header.Add("Token",token)
+				fmt.Println("token:",token)
 				swt.ResponseWithJson(w, http.StatusOK,
-					models.Response{Code: http.StatusOK, Data: models.JwtToken{Token: token}})
-				
-			}else{
-				
+					models.Response{Code: http.StatusOK, Msg: "登陆成功",Data: token})
+
+			} else {
+
 				swt.ResponseWithJson(w, http.StatusNotFound,
 					models.Response{Code: http.StatusNotFound, Msg: "the password not right"})
 			}
-			
+
 		} else {
 			swt.ResponseWithJson(w, http.StatusNotFound,
 				models.Response{Code: http.StatusNotFound, Msg: "the user not exist"})
 		}
 	}
-	
+
 }
 
-//Test 测试
-func Test(w http.ResponseWriter,r *http.Request){
-	if r.Method=="POST"{
-		res:=models.Response{Code:http.StatusOK,Msg: "删除成功",Data: nil}
-		swt.ResponseWithJson(w,http.StatusOK,res)
-		return
-	}
-	t, _ := template.ParseFiles("views/test.gtpl")
-	B:="hishi"
-	t.Execute(w, B)
-	
+//SignOut 注销处理
+func SignOut(w http.ResponseWriter, r *http.Request) {
+	r.Header.Del("Cookie")
+	http.Redirect(w,r,"/login",http.StatusFound)
 }
-

@@ -151,12 +151,6 @@ img{
     color: #9d9d9d;
     font-size: 15px;
 }
-/*标签内部垂直居中*/
-/*https://blog.csdn.net/DreamFJ/article/details/68921957*/
-/* .blog-info .label 
-.blog-info img {
-} */
-
 .blog-info .label{
     opacity: 0.8;
 }

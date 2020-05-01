@@ -4,6 +4,7 @@ import (
 	"database/sql/driver"
 	"time"
 	"webproject/utils"
+
 	//启动mysql
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -20,6 +21,7 @@ type Blog struct {
 	Tag       string    `json:"tag" db:"tag"`
 	Categorie string    `json:"categorie" db:"categorie"`
 	Title     string    `json:"title" db:"title"`
+	Author    string    `json:"author" db:"author"`
 	Context   string    `json:"context" db:"context"`
 	Date      LocalTime `json:"date" db:"date"`
 }
@@ -90,11 +92,11 @@ func (t LocalTime) String() string {
 func InsertBg(blog Blog) (err error) {
 	db := Getlink()
 	defer db.Close()
-	stmt, err := db.Prepare("INSERT INTO BlogArticle (id,tag,categorie,title,context,date) VALUES (?,?,?,?,?,?)")
-	if err!=nil{
+	stmt, err := db.Prepare("INSERT INTO BlogArticle (tag,categorie,title,context,author,date) VALUES (?,?,?,?,?,?)")
+	if err != nil {
 		return
 	}
-	_, err = stmt.Exec(blog.ID, blog.Tag, blog.Categorie, blog.Title, blog.Context, blog.Date)
+	_, err = stmt.Exec(blog.Tag, blog.Categorie, blog.Title, blog.Context, blog.Author, blog.Date)
 	return err
 }
 
@@ -106,27 +108,27 @@ func DeleteBg(id string) (err error) {
 	utils.CheckError(err)
 	_, err = stmt.Exec(id)
 	utils.CheckError(err)
+	db.Exec("ALTER TABLE BlogArticle AUTO_INCREMENT = 1")
 	return nil
 }
-
 //UpdateBg 修改blog
 func UpdateBg(blog Blog) (err error) {
 	db := Getlink()
 	defer db.Close()
-	stmt, err := db.Prepare("UPDATE BlogArticle SET tag=?,categorie=?,title=?,context=?,date=? WHERE id=?")
+	stmt, err := db.Prepare("UPDATE BlogArticle SET tag=?,categorie=?,title=?,context=?,author=?,date=? WHERE id=?")
 	utils.CheckError(err)
-	_, err = stmt.Exec(blog.Tag, blog.Categorie, blog.Title, blog.Context, blog.Date, blog.ID)
+	_, err = stmt.Exec(blog.Tag, blog.Categorie, blog.Title, blog.Context, blog.Author, blog.Date, blog.ID)
 	utils.CheckError(err)
 	return nil
 }
 
 //GetBlogbyID 通过id查询文章
-func GetBlogbyID(id string) (b Blog, err error) {
+func GetBlogbyID(id int) (b Blog, err error) {
 	db := Getlink()
 	defer db.Close()
 	var blog Blog
 	var blogtime string
-	err = db.QueryRow("SELECT id,tag,categorie,title,context,date FROM BlogArticle WHERE id=?", id).Scan(&blog.ID, &blog.Tag, &blog.Categorie, &blog.Title, &blog.Context, &blogtime)
+	err = db.QueryRow("SELECT id,tag,categorie,title,context,author,date FROM BlogArticle WHERE id=?", id).Scan(&blog.ID, &blog.Tag, &blog.Categorie, &blog.Title, &blog.Context, &blog.Author, &blogtime)
 	utils.CheckError(err)
 	time1, _ := time.ParseInLocation("2006-01-02 15:04:05", blogtime, time.Local)
 	blog.Date = LocalTime(time1)
@@ -144,7 +146,7 @@ func GetAllBlog() (b []Blog, err error) {
 	utils.CheckError(err)
 	defer rows.Close()
 	for rows.Next() {
-		err = rows.Scan(&blog.ID, &blog.Tag, &blog.Categorie, &blog.Title, &blog.Context, &blogtime)
+		err = rows.Scan(&blog.ID, &blog.Tag, &blog.Categorie, &blog.Title, &blog.Context, &blog.Author, &blogtime)
 		utils.CheckError(err)
 		time1, _ := time.ParseInLocation("2006-01-02 15:04:05", blogtime, time.Local)
 		blog.Date = LocalTime(time1)

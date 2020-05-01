@@ -1,11 +1,13 @@
 package models
 
 import (
+
 	
+	"database/sql"
+	"fmt"
+	"webproject/utils"
 	//启动mysql
 	_ "github.com/go-sql-driver/mysql"
-	"webproject/utils"
-	"database/sql"
 )
 
 //User 用户模型
@@ -32,14 +34,21 @@ func Insert(u User) (users User,err error) {
 	utils.CheckError(err)
 	return u,nil
 }
-//Delete 删除用户
-func Delete(u User) (err error) {
+//DeleteUser 删除用户
+func DeleteUser(id int) (err error) {
 	db:=Getlink()
 	defer db.Close()
+	fmt.Println("进来了删除user")
 	stmt,err := db.Prepare("DELETE FROM Bloguser WHERE id=?")
-	utils.CheckError(err)
-	_,err=stmt.Exec(u.ID)
-	utils.CheckError(err)
+	if err!=nil{
+		return err
+	}
+	_,err=stmt.Exec(id)
+	if err!=nil{
+		return err
+	}
+	db.Exec("ALTER TABLE Bloguser AUTO_INCREMENT = 1")
+	fmt.Println("好像成功删除user了？")
 	return nil
 }
 //Update 修改用户
@@ -57,8 +66,20 @@ func GetUserbyName(name string) (u User,err error){
 	db:=Getlink()
 	defer db.Close()
 	var user User
-	err=db.QueryRow("SELECT id,username,password,email FROM Bloguser WHERE username=?",name).Scan(&user.ID,&user.Username,&user.Password,&user.Email)
-	utils.CheckError(err)
+	rows,err:=db.Query("SELECT * FROM Bloguser WHERE username=?",name)
+	if err!=nil{
+		fmt.Println("找不到")
+		fmt.Println(err,user)
+		return
+	}
+	for rows.Next(){
+		err=rows.Scan(&user.ID,&user.Username,&user.Password,&user.Email)
+		if err!=nil{
+			fmt.Println("找不到ss")
+			fmt.Println(err,user)
+			return
+		}
+	}
 	return user,nil
 }
 //GetUserbyID 通过id查询用户
@@ -71,7 +92,7 @@ func GetUserbyID(id int) (u User,err error){
 	return user,nil
 }
 //GetAllUser 得到所有用户
-func GetAllUser(id int)(u []User,err error){
+func GetAllUser()(u []User,err error){
 	db:=Getlink()
 	defer db.Close()
 	var users []User

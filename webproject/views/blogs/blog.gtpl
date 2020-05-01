@@ -1,3 +1,4 @@
+
 {{define "blog"}}
 <!DOCTYPE html>
 <html lang="en">
@@ -5,27 +6,52 @@
     <meta charset="UTF-8">
     <title>index</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="statics/css/bootstrap.min1.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>
+    <link rel="stylesheet" href="statics/css/bootstrap.min.css">
     <link rel="stylesheet" href="statics/css/main.css">
     <script type="text/javascript">
-        function send(){
-            console.log(localStorage.token);
-            var currentCookie=document.cookie.split(";")[0];
-            $.ajax({
-            //几个参数需要注意一下
-                type: "GET",//方法类型
-                dataType: "json",//预期服务器返回的数据类型
-                url: "/blogindex" ,//url
-                headers:{
-                    'Content-Type':'application/json',
-                    'Token':currentCookie
-                },
-                // beforeSend:function(request){
-                //     request.setRequestHeader("Token",localStorage.token);
-                // }
-            });
-        }
-        window.onload = send;
+        // function send(){
+        //     let token = window.localStorage.getItem("Authorization");
+        //     console.log(token);
+        //     var currentCookie=document.cookie.split(";")[0];
+        //     axios.defaults.headers.common["Authorization"] = token;
+        //     console.log(currentCookie);
+        //     axios({
+		// 		headers: {
+		// 			"Authorization":token
+		// 		},
+        //         methods:'get',
+        //         url:'/blogindex',
+        //     })
+        //         .then(function (res){
+		// 			console.log("成功登录");
+		// 			axios.defaults.headers.common["Authorization"] = token;
+					
+		// 		})
+		// 		.catch(function (err){
+		// 			console.log("post err",err);
+		// 			alert(err);
+		// 			window.location.reload();
+		// 		})
+           
+            // axios.
+            // $.ajax({
+            // //几个参数需要注意一下
+            //     type: "GET",//方法类型
+            //     dataType: "json",//预期服务器返回的数据类型
+            //     url: "/blogindex" ,//url
+            //     headers:{
+            //         'Content-Type':'application/json',
+            //         'Token':currentCookie
+            //     },
+            //     // beforeSend:function(request){
+            //     //     request.setRequestHeader("Token",localStorage.token);
+            //     // }
+            // });
+        //}
+        //window.onload = send;
     </script>
 </head>
 <body>
@@ -37,8 +63,9 @@
         <label class="toggle-label visible-xs-inline-block" for="toggle-checkbox">MENU</label>
         <input class="hidden" id="toggle-checkbox" type="checkbox">
         <div class="hidden-xs">
-            <div class="col-sm-offset-2">
-                <ul class="nav navbar-nav navbar-list">
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
                     <li><a href="#">全部分类</a></li>
                     <li><a href="#">语言</a></li>
                     <li><a href="#">数据结构</a></li>
@@ -48,10 +75,11 @@
                     <li><a href="#">实战</a></li>
                 </ul>
             </div>
-            <ul class="nav navbar-nav navbar-right">
+        </nav>
+            <!-- <ul class="nav navbar-nav navbar-right">
                 <li><a href="/login">登陆</a></li>
                 <li><a href="/reginster">注册</a></li>
-            </ul>
+            </ul> -->
         </div>
     </div>
 </div>
@@ -62,9 +90,7 @@
             <div class="list-group side-bar">
             
                 <a class="list-group-item active" role="button">随笔</a>
-                {{range .tags}}
-                <a class="list-group-item" role="button">{{.}}</a>
-                {{end}}
+                <a class="list-group-item" role="button">随便</a>
                 <a class="list-group-item" role="button">随笔</a>
                 <a class="list-group-item" role="button">随笔</a>
                 <a class="list-group-item" role="button">随笔</a>
@@ -79,17 +105,23 @@
                         <img src="statics/image/blog.png">
                     </div>
                     <div class="col-xs-7">
-                        <a href="#" class="title">
-                            记录点滴，记录成长。用博客记录技术与经验的积累，在这里找到志同道合的朋友，编程的乐趣。
+                        {{range .}}
+                        <a href="/blogarticle?id={{.ID}}" class="title">
+                            {{.Title}}
                         </a>
                         <div class="info">
                             <span class="avatar"><img src="statics/image/v2-2d45613b0fb8cdd36f53c3b31d0c6ee8_hd.jpg"
                                                       alt="avatar"></span>
-                            <span>散人</span> |
-                            <span>2.8K</span>
+                            <span>{{.Tag}}</span> |
+                            <span>{{.Categorie}}</span>
                             <span class="glyphicon glyphicon-thumbs-up blog-hot" aria-hidden="true"></span> |
-                            <span>5分钟前</span>
+                            <span>{{.Date}}</span>
                         </div>
+                        {{end}}
+                        {{if .}}
+                        {{else}}
+                        <h2>这个人很懒，啥也没写</h2>
+                        {{end}}
                     </div>
                 </div>
             </div>

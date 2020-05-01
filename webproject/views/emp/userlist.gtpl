@@ -1,4 +1,4 @@
-{{define "list"}}
+{{define "userlist"}}
 <!DOCTYPE html>
 <!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
 <html lang="en">
@@ -50,42 +50,33 @@
 				<!--引入侧边栏-->
 				{{template "content2"}}
 				<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-					<h2><a class="btn btn-sm btn-success" href="/blogadd">blog添加</a></h2>
+					<h2>Blog用户</h2>
+					<!-- <h2><a class="btn btn-sm btn-success" href="/blogadd">user添加</a></h2> -->
 					<div class="table-responsive">
 						<table class="table table-striped table-sm">
 							<thead>
 								<tr>
 									<th>id</th>
-									<th>tag</th>
-									<th>categorie</th>
-									<th>title</th>
-									<th>author</th>
-									<th>date</th>
+									<th>username</th>
+									<th>email</th>
 									<th>操作</th>
 								</tr>
 							</thead>
 							<tbody>
 								{{range .}}
 								<tr>
-								{{if .}}
-								{{else}}
-								<h2>好像啥也没有哦</h2>
-								{{end}}
+								
 									<td >{{.ID}}</td>
-									<td>{{.Tag}}</td>
-									<td>{{.Categorie}}</td>
-									<td >{{.Title}}</td>
-									<td>{{.Author}}</td>
-									<td>{{.Date}}</td>
+									<td>{{.Username}}</td>
+									<td>{{.Email}}</td>
 									<td>
-										<a class="btn btn-sm btn-primary" href="/blogadit?id={{.ID}}">编辑</a>
-										<input type="hidden" id="idblog" value="{{.ID}}"> 
 										<!-- <button id="{{.ID}}" del_uri="/blogdelete?id={{.ID}}" class="btn btn-sm btn-danger deleteBtn">删除</button> -->
 										<button id="{{.ID}}" onclick="doSend1(this)" class="btn btn-sm btn-danger deleteBtn">删除</button>
 									</td>
 								</tr>
 								{{end}}
 							</tbody>
+							
 						</table>
 						<div>
 							{{if .}}
@@ -94,9 +85,8 @@
 							{{end}}
 						</div>
 					</div>
-					
 				</main>
-			</div>
+					
 		</div>
 
 		<!-- Bootstrap core JavaScript
@@ -114,38 +104,26 @@
 			feather.replace()
 		</script>
 		<script>
-			// $(".deleteBtn").click(function(){
-			// 	//删除当前blog
-			// 	var id=$(this).attr("id");
-			// 	console.log(id);
-			// 	alert(id);
-			//     // $("#deleteEmpForm").attr("action",$(this).attr("del_uri")).submit();
-			//     axios.post("/blogdelete",{
-			// 		"id":id
-			// 	})
-			// 	.then(function (res){
-			// 		console.log(res.data.msg)
-			// 		alert(res.data.msg);
-			// 		window.location.href="/bloglist";
-			// 	})
-			// 	.catch(function (err){
-			// 		console.log("post err",err);
-			// 		alert(err);
-			// 		window.location.reload();
-			// 	})
-			// });
 			function doSend1(e){
 				console.log("send")
 				var id = e.id
 				console.log(id)
-				axios.post("/blogdelete",{
-					"id":id
+				data1={"id":id}
+				axios({
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					method: 'post',
+					url: "/userdelete",
+					data: JSON.stringify(data1)
 				})
 				.then(function (res){
-					console.log(res.data.msg)
-					alert(res.data.msg);
-					window.location.href="/bloglist";
-				})
+                alert(res.data.msg);
+                console.log(res.headers);
+                console.log(res.data);
+                console.log(res.status);
+                window.location.reload();
+            	})
 				.catch(function (err){
 					console.log("post err",err);
 					alert(err);

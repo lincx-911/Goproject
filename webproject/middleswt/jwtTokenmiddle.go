@@ -15,7 +15,6 @@ func ResponseWithJson(w http.ResponseWriter, code int, payload interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	w.Write(response)
-	fmt.Println("response",w)
 }
 
 //GenerateToken 生成token
@@ -27,14 +26,14 @@ func GenerateToken(user *models.User) (string, error) {
 	return token.SignedString([]byte("secret")) //对应的字符串请自行生成，最后足够使用加密后的字符串
 }
 
-//TokenMiddleware token中间件
+//TokenMiddleware tokenyan
 func TokenMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		tokenStr := r.Header.Get("Cookie")
-		fmt.Println(tokenStr)
 		if tokenStr == "" {
-			ResponseWithJson(w, http.StatusUnauthorized,
-				models.Response{Code: http.StatusUnauthorized, Msg: "not authorized"})
+			// ResponseWithJson(w, http.StatusUnauthorized,
+			// 	models.Response{Code: http.StatusUnauthorized, Msg: "not authorized"})
+			http.Redirect(w,r,"/error",http.StatusFound)
 		} else {
 			token, _ := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -45,8 +44,9 @@ func TokenMiddleware(next http.HandlerFunc) http.HandlerFunc {
 				return []byte("secret"), nil
 			})
 			if !token.Valid {
-				ResponseWithJson(w, http.StatusUnauthorized,
-					models.Response{Code: http.StatusUnauthorized, Msg: "not authorized"})
+				// ResponseWithJson(w, http.StatusUnauthorized,
+				// 	models.Response{Code: http.StatusUnauthorized, Msg: "not authorized"})
+				http.Redirect(w,r,"/error",http.StatusFound)
 			} else {
 				next(w, r)
 			}

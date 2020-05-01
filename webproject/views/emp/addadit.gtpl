@@ -51,36 +51,40 @@
 				<!--引入侧边栏-->
 				{{template "content2"}}
 			</div>
-		</div>
-			<div class="center111">
+		
 				<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+					<div class="container">
+					<h2>Blog</h2>
 					<form id="form111">
 						<div class="form-group">
-							<label>Tag</label>
-							<input name="tag" value="{{.Tag}}" type="text" class="form-control1" placeholder="golang">
+							<label class="label-control">Tag</label>
+							<input name="tag" value="{{.Tag}}" type="text" class="form-control input-sm" placeholder="golang">
 						</div>
 						<div class="form-group">
 							<label>Categorie</label>
-							<input name="categorie" value="{{.Categorie}}" type="text" class="form-control1" placeholder="后端语言" >
+							<input name="categorie" value="{{.Categorie}}" type="text" class="form-control fc-clear" placeholder="后端语言" >
 						</div>
 						<div class="form-group">
 							<label>Title</label>
-							<input name="title" value="{{.Title}}" class="form-control1" placeholder="golang学习">
+							<input name="title" value="{{.Title}}" class="form-control fc-clear" placeholder="golang学习">
 						</div>
 						<div class="form-group">
 							<label>Context</label>
-							<!-- <textarea name="context" rows="12" cols="30" class="form-control1">此处写下blog内容
-							</textarea> -->
-							<input value="{{.Context}}" name="context" type="text" class="form-control1" placeholder="人生苦短，js搞死人">
+							<textarea name="context" rows="10" class="form-control fc-clear" >{{.Context}}
+							</textarea>
+							<!-- <input value="{{.Context}}" name="context" type="text" class="form-control" placeholder="人生苦短，js搞死人"> -->
+						</div>
+						<div class="form-group">
+							<label>Author</label>
+							<input name="author" value="{{.Author}}" class="form-control fc-clear" placeholder="菜鸟">
 						</div>
 						<div class="form-group">
 							<label>Date</label>
 							{{if .Date}}
-							<input value="{{.Date}}" name="date" type="text" class="form-control1">
+							<input value="{{.Date}}" name="date" type="text" class="form-control">
 							{{else}}
-							<input id="today" name="date" type="text" class="form-control1">
+							<input id="today" name="date" type="text" class="form-control">
 							{{end}}
-							
 						</div>
 						
 					</form>
@@ -91,10 +95,9 @@
 					<input  name="id" type="hidden" class="form-control1" value="0">
 					<button id="/blogadd" class="btn btn-primary" onclick="doSend1(this)">添加</button>
 					{{end}}
+				</div>
 				</main>
 			</div>
-	
-
 		<!-- Bootstrap core JavaScript
     ================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
@@ -131,7 +134,6 @@
 				 var data1 = JSON.stringify(transformToJson(js1));
 				 var url=e.id
 				 console.log(data1)
-				 alert(data1)
 				axios({
 					headers: {
 						'Content-Type': 'application/json'
@@ -141,10 +143,6 @@
 				data: data1
 				})
 				.then(function (res){
-					alert(res.data.msg)
-					console.log(res.headers);
-					console.log(res.data);
-					console.log(res.status);
 					alert(res.data.msg);
 					window.location.href="/bloglist";
 				})

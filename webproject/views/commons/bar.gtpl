@@ -12,7 +12,7 @@
     <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
     <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
-            <a class="nav-link" href="http://getbootstrap.com/docs/4.0/examples/dashboard/#">Sign out</a>
+            <a class="nav-link" href="/signout">注销</a>
         </li>
     </ul>
 </nav>
@@ -35,12 +35,12 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link"
-                   href="http://getbootstrap.com/docs/4.0/examples/dashboard/#">
+                   href="/userlist">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file">
                         <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
                         <polyline points="13 2 13 9 20 9"></polyline>
                     </svg>
-                    Orders
+                    用户管理
                 </a>
             </li>
             <li class="nav-item">
@@ -50,7 +50,7 @@
                         <circle cx="20" cy="21" r="1"></circle>
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                     </svg>
-                    管理
+                    内存监控
                 </a>
             </li>
             <li class="nav-item">
@@ -115,7 +115,7 @@
                         <line x1="16" y1="17" x2="8" y2="17"></line>
                         <polyline points="10 9 9 9 8 9"></polyline>
                     </svg>
-                    Last quarter
+                    待开发
                 </a>
             </li>
             <li class="nav-item">
@@ -127,7 +127,7 @@
                         <line x1="16" y1="17" x2="8" y2="17"></line>
                         <polyline points="10 9 9 9 8 9"></polyline>
                     </svg>
-                    Social engagement
+                    待开发
                 </a>
             </li>
             <li class="nav-item">
@@ -139,12 +139,15 @@
                         <line x1="16" y1="17" x2="8" y2="17"></line>
                         <polyline points="10 9 9 9 8 9"></polyline>
                     </svg>
-                    Year-end sale
+                    待开发
                 </a>
             </li>
         </ul>
     </div>
 </nav>
 {{end}}
+<script>
+    
+</script>
 </body>
 </html>
