@@ -29,11 +29,17 @@ func GenerateToken(user *models.User) (string, error) {
 //TokenMiddleware tokenyan
 func TokenMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		tokenStr := r.Header.Get("Cookie")
+		token,err := r.Cookie("Authorization")
+		if err!=nil{
+			http.Redirect(w,r,"/error",http.StatusFound)
+			return
+		}
+		tokenStr:=token.Value
 		if tokenStr == "" {
 			// ResponseWithJson(w, http.StatusUnauthorized,
 			// 	models.Response{Code: http.StatusUnauthorized, Msg: "not authorized"})
 			http.Redirect(w,r,"/error",http.StatusFound)
+			return
 		} else {
 			token, _ := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {

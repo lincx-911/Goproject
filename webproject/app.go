@@ -6,7 +6,9 @@ import (
 	cs "webproject/controllers"
 	swt "webproject/middleswt"
 )
-
+// func test(w http.ResponseWriter, r *http.Request){
+// 	fmt.Fprintf(w,"hello world")
+// }
 func main() {
 	fmt.Println("访问服务器了")
 	//静态资源的引用  我之前是用的 /statics/ 然后模板中写的是 /statics/css/然后访问不到css
@@ -19,7 +21,7 @@ func main() {
 	http.HandleFunc("/blogindex", cs.Blogindex)
 	http.HandleFunc("/blogarticle", cs.Blogarticle)
 	http.HandleFunc("/bloglist", swt.TokenMiddleware(cs.Bloglist))
-	http.HandleFunc("/index", swt.TokenMiddleware(cs.Manageindex))
+	http.HandleFunc("/index", cs.Manageindex)
 	http.HandleFunc("/blogadd", swt.TokenMiddleware(cs.Blogadd))
 	http.HandleFunc("/blogdelete", cs.Blogdel)
 	http.HandleFunc("/blogadit", swt.TokenMiddleware(cs.Blogadit))
@@ -27,5 +29,6 @@ func main() {
 	http.HandleFunc("/userlist",swt.TokenMiddleware(cs.UserList))
 	http.HandleFunc("/userdelete",cs.UserDel)
 	http.HandleFunc("/signout",cs.SignOut)
+	// http.HandleFunc("/test",test)
 	http.ListenAndServe(":8080", nil)
 }

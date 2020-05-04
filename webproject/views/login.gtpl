@@ -58,8 +58,7 @@
 					console.log(res.data.data);
 					console.log(res.status);
 					// window.localStorage.setItem("Authorization",res.data.data);//保存token
-					document.cookie = res.data.data;
-					alert(res.data.data);
+					document.cookie = "Authorization="+res.data.data;
 					window.location.href="/index";
 				})
 				.catch(function (err){
@@ -79,6 +78,9 @@
 					callback({ message: '请求超时，请重试。' });
 					}
 				});
+			}
+			function regin(){
+				window.location.href="/reginster";
 			}
 		</script>
 	</head>
