@@ -19,7 +19,7 @@ type User struct {
 }
 //Getlink 连接数据库
 func Getlink() *sql.DB {
-	db, err := sql.Open("mysql", "root:123456@tcp(120.78.6.205)/jdbc")
+	db, err := sql.Open("mysql", "root:xxxxx@tcp(127.0.0.1)/jdbc")//根据实际来改，这里我就不放我的数据库地址了
 	utils.CheckError(err)
 	return db
 }

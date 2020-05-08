@@ -20,15 +20,35 @@ func Bloglogin(w http.ResponseWriter, r *http.Request) {
 //Blogindex 博客首页
 func Blogindex(w http.ResponseWriter, r *http.Request) {
 
+	
 	t := template.Must(template.ParseFiles("views/blogs/blog.gtpl", "views/blogs/narbar/narbar.gtpl"))
-	blogs,err:=models.GetAllBlog()
+	Blogs,err:=models.GetAllBlog()
+
+	Tags,err:=models.GetTags()
+
+	Tagges:=make(map[string][]int)
+	
+	for _,k:= range Tags{
+		Tagges[k.Tag]= append(Tagges[k.Tag],k.ID)
+	}
+	
+	Categories,err:=models.GetCategories()
+
+	Cates := make(map[string][]int)
+	for _,k:= range Categories{
+		Cates[k.Categorie]=append(Cates[k.Categorie],k.ID)
+	}
 	if err!=nil{
 		res:=models.Response{Code:http.StatusNotAcceptable,Msg: "blog列表获取失败",Data: nil}
 		swt.ResponseWithJson(w,http.StatusNotAcceptable,res)
-		blogs=nil
+		Blogs=nil
 	}
-	fmt.Println("blog:",blogs)
-	t.ExecuteTemplate(w, "blog", blogs)
+	Respose := map[string]interface{}{
+		"Blogs":Blogs,
+		"Tags":Tagges,
+		"Categories":Cates,
+	}
+	t.ExecuteTemplate(w, "blog",Respose)
 }
 
 //Blogarticle 文章

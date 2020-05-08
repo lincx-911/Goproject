@@ -17,7 +17,7 @@ type LocalTime time.Time
 
 //Blog 模型
 type Blog struct {
-	ID        string    `json:"id" db:"id"`
+	ID        int    `json:"id" db:"id"`
 	Tag       string    `json:"tag" db:"tag"`
 	Categorie string    `json:"categorie" db:"categorie"`
 	Title     string    `json:"title" db:"title"`
@@ -28,11 +28,13 @@ type Blog struct {
 
 //Tags 标签模型
 type Tags struct {
+	ID        int    `json:"id"`
 	Tag string `json:"tag"`
 }
 
 //Categories 分类
 type Categories struct {
+	ID        int    `json:"id"`
 	Categorie string `json:"catagorie"`
 }
 
@@ -161,4 +163,46 @@ func CountBlog() (count int, err error) {
 	defer db.Close()
 	err = db.QueryRow("SELECT count(*) FROM BlogArticle").Scan(&count)
 	return
+}
+
+//GetTags 返回Tag列表
+func GetTags()(tags []Tags,err error){
+	db:=Getlink()
+	defer db.Close()
+	
+	rows,err:=db.Query("SELECT id,tag FROM BlogArticle")
+	defer rows.Close()
+	if err!=nil{
+		return tags,err
+	}
+	var t Tags
+	for rows.Next() {
+		err = rows.Scan(&t.ID,&t.Tag)
+		if err!=nil{
+			return
+		}
+		tags = append(tags, t)
+	}
+	return tags, nil
+}
+
+//GetCategories 返回Categorie列表c
+func GetCategories()(cs []Categories,err error){
+	db:=Getlink()
+	defer db.Close()
+	
+	rows,err:=db.Query("SELECT id,categorie FROM BlogArticle")
+	defer rows.Close()
+	if err!=nil{
+		return cs,err
+	}
+	var c Categories
+	for rows.Next() {
+		err = rows.Scan(&c.ID,&c.Categorie)
+		if err!=nil{
+			return
+		}
+		cs = append(cs, c)
+	}
+	return cs, nil
 }

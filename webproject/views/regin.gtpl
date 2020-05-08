@@ -170,7 +170,6 @@
                 console.log(res.headers);
                 console.log(res.data);
                 console.log(res.status);
-                alert(res.data.msg);
                 window.location.href="/login";
             })
             .catch(function (err){

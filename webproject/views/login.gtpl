@@ -14,28 +14,6 @@
 		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>
 		<script type="text/javascript">
-		
-			// function login() {
-			// 	$.ajax({
-			// 	//几个参数需要注意一下
-			// 		type: "POST",//方法类型
-			// 		dataType: "json",//预期服务器返回的数据类型
-			// 		url: "/login" ,//url
-			// 		data: $('#form1').serialize(),
-			// 		success: function (result) {w
-			// 			console.log(result);//打印服务端返回的数据(调试用)
-			// 			const token = result.data.token
-			// 			document.cookie=result.data.token
-			// 			if (token) {
-			// 				alert("login seccess");
-			// 				window.location.href="/blogindex";
-			// 			}
-			// 		},
-			// 		error : function() {
-			// 			alert("异常！");
-			// 		}
-			// 	});
-			// }
 			function login(){
 				var username = document.getElementById("username").value;
 				var password = document.getElementById("password").value;
@@ -63,7 +41,7 @@
 				})
 				.catch(function (err){
 					console.log("post err",err);
-					alert(err);
+					alert("用户名/密码错误");
 					window.location.reload();
 				})
 			}
@@ -99,7 +77,7 @@
         		</label>
 			</div>
 			<button class="btn btn-lg btn-primary btn-block" type="submit" onclick="login()">登录</button>
-			<button class="btn btn-lg btn-primary btn-block" type="submit" onclick="login()">注册</button>
+			<button class="btn btn-lg btn-primary btn-block" type="submit" onclick="regin()">注册</button>
 			<p class="mt-5 mb-3 text-muted">© 2017-2018</p>
 			<a class="btn btn-sm" th:href="@{/index.html(l='zh_CN')}">中文</a>
 			<a class="btn btn-sm" th:href="@{/index.html(l='en_US')}">English</a>
