@@ -1,0 +1,12 @@
+FROM centos:latest
+
+# 为我们的镜像设置必要的环境变量
+
+WORKDIR /app
+
+COPY service_srv /app
+
+
+CMD [ "./service_srv" ]
+
+

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: web-srv
+  name: web-srv
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8200
+    nodePort: 30018
+  selector:
+    app: web-srv
+  type: NodePort

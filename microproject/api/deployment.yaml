@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-srv
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      project: www
+      app: api-srv
+  template:
+    metadata:
+      labels:
+        project: www
+        app: api-srv
+    spec:
+      imagePullSecrets: 
+      - name: "docker-regsitry-auth"
+      containers:
+      - image: registry.cn-shenzhen.aliyuncs.com/lin_cx/api_srv:1.0
+        name: api-srv
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8300
+          name: api-srv
+          protocol: TCP
+        

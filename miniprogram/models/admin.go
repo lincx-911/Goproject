@@ -1,65 +1,50 @@
 package models
 
-import (
+import(
 	orm "miniprogram/database"
 )
 
+
 //Admin 管理员
-type Admin struct {
-	Aid      int    `json:"aid"`      //列名为aid
-	Aname    string `json:"aname"`    //列名为aname
-	Password string `json:"password"` //列名为password
+type Admin struct{
+	Aid int `json:"id" gorm:"primary_key"`//列名为aid
+	Aname string `json:"aname"`//列名为aname
+	Password string `json:"password"`//
 }
 
 //InsertAdmin 添加admin
-func InsertAdmin(admin Admin) (id int, err error) {
-	//orm.DB.Exec("INSERT admins SET aname=?,password=?",admin.Aname,admin)
-	err = orm.DB.Create(&admin).Error
-	if err == nil {
-		id = admin.Aid
+func (admin Admin)InsertAdmin()(id int,err error)  {
+	resutl:=orm.DB.Create(&admin)
+	id = admin.Aid
+	if resutl.Error!=nil{
+		err = resutl.Error
 		return
 	}
 	return
 }
-
 //DeleteAdmin 删除admin
-func DeleteAdmin(id int) (result Admin, err error) {
-	
-	err=orm.DB.Where("aid=?",id).First(&result).Error
-	if result.Aid==0{
+func (admin *Admin)DeleteAdmin(id int)(result Admin,err error){
+	if err = orm.DB.Select([]string{"id"}).First(&admin, id).Error; err != nil {
 		return
 	}
-	if err = orm.DB.Where(Admin{Aid:id}).Delete(Admin{}).Error; err != nil {
-		return
+	if err = orm.DB.Delete(&admin).Error;err!=nil{
+		return 
 	}
-	err=orm.DB.Exec("ALTER TABLE admins AUTO_INCREMENT = 1").Error
+	result = *admin
 	return
 }
 
 //UpdateAdmin 更新admin
-func UpdateAdmin(admin Admin) (updateAdmin Admin, err error) {
-	err=orm.DB.Model(Admin{}).Where("aid=?",admin.Aid).Update(admin).Error
-	if err==nil{
-		updateAdmin = admin
+func (admin *Admin)UpdateAdmin(id int)(updateAdmin Admin,err error){
+	if err = orm.DB.Select([]string{"id", "username"}).First(&updateAdmin, id).Error; err != nil {
+		return
 	}
-	return
 
-}
-
-//SelectAdminbyName 通过名字查询管理员
-func (admin *Admin) SelectAdminbyName() (result Admin, err error) {
-	if err = orm.DB.Where("aname=? AND password=?", admin.Aname, admin.Password).Find(&result).Error; err != nil {
+	//参数1:是要修改的数据
+	//参数2:是修改的数据
+	if err = orm.DB.Model(&updateAdmin).Updates(&admin).Error; err != nil {
 		return
 	}
 	return
-}
-//SelectAdminbyID 通过id查询管理员
-func SelectAdminbyID(id int)(result Admin,err error){
-	err=orm.DB.Where("aid=?",id).First(&result).Error
-	return
-}
-//GetallAdmins 返回
-func GetallAdmins()  (admins []Admin,err error){
-	err = orm.DB.Find(&admins).Error
-	return
+
 }

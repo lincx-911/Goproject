@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package go.micro.srv.post;
+
+
+message post{
+    int64 id = 1;
+    string title = 2;
+    string content=3;
+    uint64 createdTime=4;
+    uint64 updatedTime=5;
+    int64 userID=6;
+}
+
+message Error{
+    int32 code=1;
+    string detail=2;
+}
+
+message Request{
+    string postID=1;
+    string title=2;
+    int64 userId=3;
+}
+
+message Response{
+    bool success=1;
+    Error error=2;
+    post post=3;
+}
+
+service Post{
+    rpc QueryUserPosts (Request) returns (Response);
+}
+

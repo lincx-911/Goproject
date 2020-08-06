@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-srv
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      project: www
+      app: web-srv
+  template:
+    metadata:
+      labels:
+        project: www
+        app: web-srv
+    spec:
+      imagePullSecrets: 
+      - name: "docker-regsitry-auth"
+      containers:
+      - image: registry.cn-shenzhen.aliyuncs.com/lin_cx/web_srv:1.0
+        name: web-srv
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8200
+          name: web-srv
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8200
+          initialDelaySeconds: 60
+          timeoutSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8200
+          initialDelaySeconds: 60
+          timeoutSeconds: 20

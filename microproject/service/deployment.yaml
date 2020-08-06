@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: svc-srv
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      project: www
+      app: svc-srv
+  template:
+    metadata:
+      labels:
+        project: www
+        app: svc-srv
+    spec:
+      imagePullSecrets: 
+      - name: "docker-regsitry-auth"
+      containers:
+      - image: registry.cn-shenzhen.aliyuncs.com/lin_cx/service_srv:1.0
+        name: svc-srv
+        imagePullPolicy: Always
