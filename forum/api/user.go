@@ -148,8 +148,8 @@ func Sendemail(ctx *gin.Context) {
 	mailConf.Title = "邮箱验证"
 	mailConf.Body = common.GenValidateCode(6)
 	mailConf.RecipientList = []string{email}
-	mailConf.Sender = `495572661@qq.com`
-	mailConf.SPassword = "jxkydqqkgoqfbhhg"
+	mailConf.Sender = `49xxxxxxxxxx@qq.com`
+	mailConf.SPassword = "xxxxxxxxxx"
 	mailConf.SMTPAddr = `smtp.qq.com`
 	mailConf.SMTPPort = 25
 
