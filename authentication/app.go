@@ -75,7 +75,7 @@ func testHandler(ctx context.Context, in *common.InvocationEvent) (out *common.C
 	res := common1.Result{
 		Code: common1.OK,
 		Msg:  "success",
-		Data: "林培创最帅",
+		Data: "testhandle",
 	}
 	resbuff,_:=json.Marshal(res)
 	out = &common.Content{
