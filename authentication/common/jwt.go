@@ -24,8 +24,8 @@ var MySecret = []byte("54f12kkkc8-1fff56-45chg1-a3fsjc-2c546bc2b")
 
 //GenToken 生成token
 func GenToken(claim MyClaim) (string,error) {
-	claim.ExpiresAt=time.Now().Add(TokenExpireDuration).Unix()
-	claim.IssuedAt=time.Now().Unix()
+	//claim.ExpiresAt=time.Now().Add(TokenExpireDuration).Unix()
+	//claim.IssuedAt=time.Now().Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
 	return token.SignedString(MySecret)
 }

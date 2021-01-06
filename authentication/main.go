@@ -1,13 +1,15 @@
-// package main
+package main
 
-// import (
-// 	"authentication/router"
-// 	"net/http"
-// )
+import (
+	"authentication/router"
+	"log"
+	"net/http"
+)
 
+func main() {
+	s := router.Server
+	if err := s.Start(); err != nil && err != http.ErrServerClosed {
+		log.Fatalf("error listenning: %v", err)
+	}
+}
 
-
-// func main(){
-// 	route := router.InitRouter()
-// 	http.ListenAndServe(":8050",route)
-// }
